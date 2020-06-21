@@ -1,4 +1,5 @@
 db.sqlite3
+.fuse_hidden*
 geckodriver.log
 __pycache__/
 *.pyc
