@@ -44,7 +44,5 @@ class TestVisitorBaru(unittest.TestCase):
 
         # Puas, dia balik tidur lagi.
 
-        # browser.quit()
-
 if __name__ == '__main__':
     unittest.main(warnings='ignore')
