@@ -17,7 +17,7 @@ class TestVisitorBaru(unittest.TestCase):
         # Dia memperhatikan title dan header halamannya
         # menyebut todo list
         self.assertIn('To-Do', self.browser.title)
-        self.fail('Selesaikan testnya!')
+        self.fail('Test selesai!')
 
         # Dia diajak untuk langsung memasukkan satu item todo
 
