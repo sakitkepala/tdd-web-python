@@ -41,23 +41,31 @@ class TestVisitorBaru(unittest.TestCase):
 
         table = self.browser.find_element_by_id('id_list_table')
         rows = table.find_elements_by_tag_name('tr')
-        self.assertTrue(
-            any(row.text == '1: Beli bulu merak' for row in rows),
-            "Item to-do yang baru tidak muncul di tabel."
-        )
+        self.assertIn('1: Beli bulu merak', [row.text for row in rows])
 
         # Masih ada text box yang ajak dia isikan item lagi. Dia
         # masukkan "Pakai bulu merak untuk membuat umpan pancing
         # pemikat" (MJ memang agak metodis).
-        self.fail('Testnya diselesaikan!')
+        inputbox = self.browser.find_element_by_id('id_new_item')
+        inputbox.send_keys('Pakai bulu merak untuk membuat umpan pancing pemikat')
+        inputbox.send_keys(Keys.ENTER)
+        time.sleep(1)
 
         # Halamannya terupdate lagi, dan sekarang menampilkan
         # kedua item dalam listnya.
+        table = self.browser.find_element_by_id('id_list_table')
+        rows = table.find_elements_by_tag_name('tr')
+        self.assertIn('1: Beli bulu merak', [row.text for row in rows])
+        self.assertIn(
+            '2: Pakai bulu merak untuk membuat umpan pancing pemikat',
+            [row.text for row in rows]
+        )
 
         # MJ bertanya-tanya apakah websitenya akan mengingat
         # list yang dia buat. Lalu dia lihat kalau situsnya
         # memunculkan URL unik untuknya -- ada semacam teks
         # penjelas untuk efek itu.
+        self.fail('Testnya diselesaikan!')
 
         # Dia kunjungi link itu - todo list buatannya masih di situ.
 
