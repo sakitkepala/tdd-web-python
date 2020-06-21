@@ -11,6 +11,11 @@ class TestVisitorBaru(unittest.TestCase):
     def tearDown(self):
         self.browser.quit()
 
+    def cek_row_di_tabel_list(self, teks_row):
+        table = self.browser.find_element_by_id('id_list_table')
+        rows = table.find_elements_by_tag_name('tr')
+        self.assertIn(teks_row, [row.text for row in rows])
+
     def test_bisa_memulai_list_dan_tarik_lagi_nantinya(self):
         # MJ baru saja dengar tentang app todo online
         # yang oke punya. Dia lalu cek websitenya.
@@ -38,10 +43,7 @@ class TestVisitorBaru(unittest.TestCase):
         # sebagai salah satu item yang ada di list todo
         inputbox.send_keys(Keys.ENTER)
         time.sleep(1)
-
-        table = self.browser.find_element_by_id('id_list_table')
-        rows = table.find_elements_by_tag_name('tr')
-        self.assertIn('1: Beli bulu merak', [row.text for row in rows])
+        self.cek_row_di_tabel_list('1: Beli bulu merak')
 
         # Masih ada text box yang ajak dia isikan item lagi. Dia
         # masukkan "Pakai bulu merak untuk membuat umpan pancing
@@ -53,13 +55,8 @@ class TestVisitorBaru(unittest.TestCase):
 
         # Halamannya terupdate lagi, dan sekarang menampilkan
         # kedua item dalam listnya.
-        table = self.browser.find_element_by_id('id_list_table')
-        rows = table.find_elements_by_tag_name('tr')
-        self.assertIn('1: Beli bulu merak', [row.text for row in rows])
-        self.assertIn(
-            '2: Pakai bulu merak untuk membuat umpan pancing pemikat',
-            [row.text for row in rows]
-        )
+        self.cek_row_di_tabel_list('1: Beli bulu merak')
+        self.cek_row_di_tabel_list('2: Pakai bulu merak untuk membuat umpan pancing pemikat')
 
         # MJ bertanya-tanya apakah websitenya akan mengingat
         # list yang dia buat. Lalu dia lihat kalau situsnya
