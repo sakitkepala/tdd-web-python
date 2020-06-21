@@ -62,7 +62,7 @@ class TestVisitorBaru(unittest.TestCase):
         # list yang dia buat. Lalu dia lihat kalau situsnya
         # memunculkan URL unik untuknya -- ada semacam teks
         # penjelas untuk efek itu.
-        self.fail('Testnya diselesaikan!')
+        self.fail('Testnya selesai!')
 
         # Dia kunjungi link itu - todo list buatannya masih di situ.
 
