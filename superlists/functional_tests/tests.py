@@ -1,7 +1,10 @@
 from django.test import LiveServerTestCase
 from selenium import webdriver
+from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.common.keys import Keys
 import time
+
+MAX_TUNGGU = 10
 
 
 class TestVisitorBaru(LiveServerTestCase):
@@ -12,10 +15,18 @@ class TestVisitorBaru(LiveServerTestCase):
     def tearDown(self):
         self.browser.quit()
 
-    def cek_row_di_tabel_list(self, teks_row):
-        table = self.browser.find_element_by_id('id_list_table')
-        rows = table.find_elements_by_tag_name('tr')
-        self.assertIn(teks_row, [row.text for row in rows])
+    def tunggu_row_di_tabel_list(self, teks_row):
+        time_mulai = time.time()
+        while True:
+            try:
+                table = self.browser.find_element_by_id('id_list_table')
+                rows = table.find_elements_by_tag_name('tr')
+                self.assertIn(teks_row, [row.text for row in rows])
+                return
+            except (AssertionError, WebDriverException) as e:
+                if time.time() - time_mulai > MAX_TUNGGU:
+                    raise e
+                time.sleep(.5)
 
     def test_bisa_memulai_list_dan_tarik_lagi_nantinya(self):
         # MJ baru saja dengar tentang app todo online
@@ -43,8 +54,7 @@ class TestVisitorBaru(LiveServerTestCase):
         # halamannya menampilkan list "1: Beli bulu merak"
         # sebagai salah satu item yang ada di list todo
         inputbox.send_keys(Keys.ENTER)
-        time.sleep(1)
-        self.cek_row_di_tabel_list('1: Beli bulu merak')
+        self.tunggu_row_di_tabel_list('1: Beli bulu merak')
 
         # Masih ada text box yang ajak dia isikan item lagi. Dia
         # masukkan "Pakai bulu merak untuk membuat umpan pancing
@@ -52,12 +62,11 @@ class TestVisitorBaru(LiveServerTestCase):
         inputbox = self.browser.find_element_by_id('id_new_item')
         inputbox.send_keys('Pakai bulu merak untuk membuat umpan pancing pemikat')
         inputbox.send_keys(Keys.ENTER)
-        time.sleep(1)
 
         # Halamannya terupdate lagi, dan sekarang menampilkan
         # kedua item dalam listnya.
-        self.cek_row_di_tabel_list('1: Beli bulu merak')
-        self.cek_row_di_tabel_list('2: Pakai bulu merak untuk membuat umpan pancing pemikat')
+        self.tunggu_row_di_tabel_list('1: Beli bulu merak')
+        self.tunggu_row_di_tabel_list('2: Pakai bulu merak untuk membuat umpan pancing pemikat')
 
         # MJ bertanya-tanya apakah websitenya akan mengingat
         # list yang dia buat. Lalu dia lihat kalau situsnya
