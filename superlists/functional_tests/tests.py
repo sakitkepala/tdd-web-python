@@ -1,9 +1,10 @@
+from django.test import LiveServerTestCase
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import time
-import unittest
 
-class TestVisitorBaru(unittest.TestCase):
+
+class TestVisitorBaru(LiveServerTestCase):
 
     def setUp(self):
         self.browser = webdriver.Firefox()
@@ -19,7 +20,7 @@ class TestVisitorBaru(unittest.TestCase):
     def test_bisa_memulai_list_dan_tarik_lagi_nantinya(self):
         # MJ baru saja dengar tentang app todo online
         # yang oke punya. Dia lalu cek websitenya.
-        self.browser.get('http://localhost:8000')
+        self.browser.get(self.live_server_url)
 
         # Dia memperhatikan title dan header halamannya
         # menyebut todo list
