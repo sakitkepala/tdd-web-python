@@ -68,6 +68,3 @@ class TestVisitorBaru(LiveServerTestCase):
         # Dia kunjungi link itu - todo list buatannya masih di situ.
 
         # Puas, dia balik tidur lagi.
-
-if __name__ == '__main__':
-    unittest.main(warnings='ignore')
