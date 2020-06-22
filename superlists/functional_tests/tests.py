@@ -76,4 +76,49 @@ class TestVisitorBaru(LiveServerTestCase):
 
         # Dia kunjungi link itu - todo list buatannya masih di situ.
 
-        # Puas, dia balik tidur lagi.
+        # Setelah puas, dia balik tidur lagi.
+
+    def test_banyak_user_bisa_bikin_list_di_beda_url(self):
+        # MJ bikin todo list baru
+        self.browser.get(self.live_server_url)
+        inputbox = self.browser.find_element_by_id('id_new_item')
+        inputbox.send_keys('Beli bulu merak')
+        inputbox.send_keys(Keys.ENTER)
+        self.tunggu_row_di_tabel_list('1: Beli bulu merak')
+
+        # Dia sadar list yang dia buat punya url unik
+        url_list_mj = self.browser.current_url
+        self.assertRegex(url_list_mj, '/lists/.+')
+
+        # Sekarang seorang user baru, Belu, datang ke website
+
+        ## Kita pakai session browser baru untuk pastikan tidak ada
+        ## informasinya MJ yang masuk dari cookie dsb.
+        self.browser.quit()
+        self.browser = webdriver.Firefox()
+
+        # Belu datang kunjungi halaman home. Tidak ada tanda-tanda
+        # dari list MJ
+        self.browser.get(self.live_server_url)
+        teks_halaman = self.browser.find_element_by_tag_name('body').text
+        self.assertNotIn('Belu bulu merak', teks_halaman)
+        self.assertNotIn('untuk membuat umpan', teks_halaman)
+
+        # Belu bikin list baru dengan mengisikan satu item baru.
+        # Dia tidak setertarik MJ.
+        inputbox = self.browser.find_element_by_id('id_new_item')
+        inputbox.send_keys('Beli susu')
+        inputbox.send_keys(Keys.ENTER)
+        self.tunggu_row_di_tabel_list('1: Beli susu')
+
+        # Belu dapat url yang khusus untuk dia sendiri
+        url_list_belu = self.browser.current_url
+        self.assertRegex(url_list_belu, '/lists/.+')
+        self.assertNotEqual(url_list_belu, url_list_mj)
+
+        # Sekali lagi, tidak ada jejak list milik MJ
+        teks_halaman = self.browser.find_element_by_tag_name('body').text
+        self.assertNotIn('Beli bulu merak', teks_halaman)
+        self.assertIn('Beli susu', teks_halaman)
+
+        # Setelah puas, mereka berdua balik tidur lagi masing-masing
