@@ -25,16 +25,25 @@ class TestHomePage(TestCase):
         response = self.client.post('/', data={'item_text': 'Satu item list baru'})
 
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response['location'], '/')
+        self.assertEqual(response['location'], '/lists/satu-satunya-list-di-dunia/')
 
-    def test_menampilkan_semua_item_list(self):
+
+class TestListView(TestCase):
+
+    def test_pakai_template_list(self):
+        response = self.client.get('/lists/satu-satunya-list-di-dunia/')
+
+        self.assertTemplateUsed(response, 'list.html')
+
+    def test_menampilkan_semua_item(self):
         Item.objects.create(text='Semacam item 1')
         Item.objects.create(text='Semacam item 2')
 
-        response = self.client.get('/')
+        response = self.client.get('/lists/satu-satunya-list-di-dunia/')
 
-        self.assertIn('Semacam item 1', response.content.decode())
-        self.assertIn('Semacam item 2', response.content.decode())
+        self.assertContains(response, 'Semacam item 1')
+        self.assertContains(response, 'Semacam item 2')
+
 
 class TestItemModel(TestCase):
 
