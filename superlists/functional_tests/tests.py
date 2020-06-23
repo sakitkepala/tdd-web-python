@@ -101,7 +101,7 @@ class TestVisitorBaru(LiveServerTestCase):
         # dari list MJ
         self.browser.get(self.live_server_url)
         teks_halaman = self.browser.find_element_by_tag_name('body').text
-        self.assertNotIn('Belu bulu merak', teks_halaman)
+        self.assertNotIn('Beli bulu merak', teks_halaman)
         self.assertNotIn('untuk membuat umpan', teks_halaman)
 
         # Belu bikin list baru dengan mengisikan satu item baru.
