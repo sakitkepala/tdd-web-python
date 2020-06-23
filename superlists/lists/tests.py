@@ -14,18 +14,20 @@ class TestHomePage(TestCase):
 
         self.assertTemplateUsed(response, 'home.html')
 
+
+class TestListBaru(TestCase):
+
     def test_bisa_simpan_request_POST(self):
-        self.client.post('/', data={'item_text': 'Satu item list baru'})
+        self.client.post('/lists/baru', data={'item_text': 'Satu item list baru'})
 
         self.assertEqual(Item.objects.count(), 1)
         item_baru = Item.objects.first()
         self.assertEqual(item_baru.text, 'Satu item list baru')
 
     def test_redirect_setelah_POST(self):
-        response = self.client.post('/', data={'item_text': 'Satu item list baru'})
+        response = self.client.post('/lists/baru', data={'item_text': 'Satu item list baru'})
 
-        self.assertEqual(response.status_code, 302)
-        self.assertEqual(response['location'], '/lists/satu-satunya-list-di-dunia/')
+        self.assertRedirects(response, '/lists/satu-satunya-list-di-dunia/')
 
 
 class TestListView(TestCase):
