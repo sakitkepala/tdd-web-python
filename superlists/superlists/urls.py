@@ -19,5 +19,6 @@ from lists import views
 urlpatterns = [
     url(r'^$', views.home_page, name='home'),
     url(r'^lists/baru$', views.list_baru, name='list_baru'),
-    url(r'^lists/satu-satunya-list-di-dunia/$', views.view_list, name='view_list')
+    url(r'^lists/(\d+)/$', views.view_list, name='view_list'),
+    url(r'^lists/(\d+)/tambah_item$', views.tambah_item, name='tambah_item'),
 ]
