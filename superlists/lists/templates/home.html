@@ -1,12 +1,5 @@
-<html>
-    <head>
-        <title>To-Do lists</title>
-    </head>
-    <body>
-        <h1>Buat To-Do list baru</h1>
-        <form method="POST" action="/lists/baru">
-            <input name="item_text" id="id_new_item" placeholder="Masukkan satu item to-do" />
-            {% csrf_token %}
-        </form>
-    </body>
-</html>
+{% extends 'base.html' %}
+
+{% block header_text %}Buat To-Do list baru{% endblock %}
+
+{% block form_action %}/lists/baru{% endblock %}
