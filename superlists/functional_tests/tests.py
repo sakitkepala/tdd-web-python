@@ -1,4 +1,4 @@
-from django.test import LiveServerTestCase
+from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium import webdriver
 from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.common.keys import Keys
@@ -7,7 +7,7 @@ import time
 MAX_TUNGGU = 10
 
 
-class TestVisitorBaru(LiveServerTestCase):
+class TestVisitorBaru(StaticLiveServerTestCase):
 
     def setUp(self):
         self.browser = webdriver.Firefox()
@@ -127,6 +127,7 @@ class TestVisitorBaru(LiveServerTestCase):
         # MJ ke halaman home
         self.browser.get(self.live_server_url)
         self.browser.set_window_size(1024, 768)
+        time.sleep(.1) # browser nge-close-nya kecepetan sebelum windownya sempat ke-resize lebarnya, di-delay sebentar biar sempat ke-resize dulu
 
         # Dia lihat box inputnya ada di tengah dengan apik
         inputbox = self.browser.find_element_by_id('id_new_item')
