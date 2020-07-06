@@ -1,36 +1,9 @@
-import os
-from django.contrib.staticfiles.testing import StaticLiveServerTestCase
+from .base import FunctionalTest
 from selenium import webdriver
-from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.common.keys import Keys
-import time
-
-MAX_TUNGGU = 10
 
 
-class TestVisitorBaru(StaticLiveServerTestCase):
-
-    def setUp(self):
-        self.browser = webdriver.Firefox()
-        staging_server = os.environ.get('STAGING_SERVER')
-        if staging_server:
-            self.live_server_url = 'http://' + staging_server
-
-    def tearDown(self):
-        self.browser.quit()
-
-    def tunggu_row_di_tabel_list(self, teks_row):
-        time_mulai = time.time()
-        while True:
-            try:
-                table = self.browser.find_element_by_id('id_list_table')
-                rows = table.find_elements_by_tag_name('tr')
-                self.assertIn(teks_row, [row.text for row in rows])
-                return
-            except (AssertionError, WebDriverException) as e:
-                if time.time() - time_mulai > MAX_TUNGGU:
-                    raise e
-                time.sleep(.5)
+class TestVisitorBaru(FunctionalTest):
 
     def test_bisa_memulai_list_dan_tarik_lagi_nantinya(self):
         # MJ baru saja dengar tentang app todo online
@@ -76,7 +49,6 @@ class TestVisitorBaru(StaticLiveServerTestCase):
         # list yang dia buat. Lalu dia lihat kalau situsnya
         # memunculkan URL unik untuknya -- ada semacam teks
         # penjelas untuk efek itu.
-        self.fail('Testnya selesai!')
 
         # Dia kunjungi link itu - todo list buatannya masih di situ.
 
@@ -126,29 +98,3 @@ class TestVisitorBaru(StaticLiveServerTestCase):
         self.assertIn('Beli susu', teks_halaman)
 
         # Setelah puas, mereka berdua balik tidur lagi masing-masing
-
-    def test_layout_dan_styling(self):
-        # MJ ke halaman home
-        self.browser.get(self.live_server_url)
-        self.browser.set_window_size(1024, 768)
-        time.sleep(.1) # browser nge-close-nya kecepetan sebelum windownya sempat ke-resize lebarnya, di-delay sebentar biar sempat ke-resize dulu
-
-        # Dia lihat box inputnya ada di tengah dengan apik
-        inputbox = self.browser.find_element_by_id('id_new_item')
-        self.assertAlmostEqual(
-            inputbox.location['x'] + inputbox.size['width'] / 2,
-            512,
-            delta=10
-        )
-
-        # Dia bikin list baru dan lihat inputnya di sana juga
-        # ada di tengah dengan apik
-        inputbox.send_keys('testing')
-        inputbox.send_keys(Keys.ENTER)
-        self.tunggu_row_di_tabel_list('1: testing')
-        inputbox = self.browser.find_element_by_id('id_new_item')
-        self.assertAlmostEqual(
-            inputbox.location['x'] + inputbox.size['width'] / 2,
-            512,
-            delta=10
-        )
