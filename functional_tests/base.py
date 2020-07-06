@@ -29,4 +29,14 @@ class FunctionalTest(StaticLiveServerTestCase):
             except (AssertionError, WebDriverException) as e:
                 if time.time() - time_mulai > MAX_TUNGGU:
                     raise e
-                time.sleep(.5)
+                time.sleep(.25)
+
+    def menunggu(self, fn):
+        time_mulai = time.time()
+        while True:
+            try:
+                return fn()
+            except (AssertionError, WebDriverException) as e:
+                if time.time() - time_mulai > MAX_TUNGGU:
+                    raise e
+                time.sleep(.25)
