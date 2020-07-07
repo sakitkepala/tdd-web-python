@@ -1,4 +1,5 @@
 from django.test import TestCase
+from django.utils.html import escape
 from lists.models import Item, List
 
 
@@ -24,6 +25,18 @@ class TestListBaru(TestCase):
 
         list_baru = List.objects.first()
         self.assertRedirects(response, f'/lists/{list_baru.id}/')
+
+    def test_error_validasi_dikirimkan_ke_template_home_page(self):
+        response = self.client.post('/lists/baru', data={'item_text': ''})
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'home.html')
+        error_diharapkan = escape('Kamu gak boleh bikin item list kosong')
+        self.assertContains(response, error_diharapkan)
+
+    def test_item_list_invalid_tidak_disimpan(self):
+        self.client.post('/lists/baru', data={'item_text': ''})
+        self.assertEqual(List.objects.count(), 0)
+        self.assertEqual(Item.objects.count(), 0)
 
 
 class TestViewList(TestCase):

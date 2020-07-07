@@ -1,4 +1,5 @@
 from django.test import TestCase
+from django.core.exceptions import ValidationError
 from lists.models import Item, List
 
 
@@ -30,3 +31,10 @@ class TestModelListDanItem(TestCase):
         self.assertEqual(item_tersimpan_pertama.list, list_)
         self.assertEqual(item_tersimpan_kedua.text, 'Item yang kedua')
         self.assertEqual(item_tersimpan_kedua.list, list_)
+
+    def test_tidak_boleh_simpan_item_list_kosongan(self):
+        list_ = List.objects.create()
+        item = Item(list=list_, text='')
+        with self.assertRaises(ValidationError):
+            item.save()
+            item.full_clean()
