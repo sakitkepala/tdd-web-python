@@ -72,15 +72,12 @@ class TestViewList(TestCase):
         self.assertNotContains(response, 'Item list lain 1')
         self.assertNotContains(response, 'Item list lain 2')
 
-
-class TestItemBaru(TestCase):
-
     def test_bisa_simpan_request_POST_ke_list_yang_sudah_ada(self):
         list_lain = List.objects.create()
         list_yang_benar = List.objects.create()
 
         self.client.post(
-            f'/lists/{list_yang_benar.id}/tambah_item',
+            f'/lists/{list_yang_benar.id}/',
             data={'item_text': 'Item baru untuk list yang sudah ada'}
         )
 
@@ -89,12 +86,12 @@ class TestItemBaru(TestCase):
         self.assertEqual(item_baru.text, 'Item baru untuk list yang sudah ada')
         self.assertEqual(item_baru.list, list_yang_benar)
 
-    def test_redirect_ke_view_list(self):
+    def test_POST_redirect_ke_view_list(self):
         list_lain = List.objects.create()
         list_yang_benar = List.objects.create()
 
         response = self.client.post(
-            f'/lists/{list_yang_benar.id}/tambah_item',
+            f'/lists/{list_yang_benar.id}/',
             data={'item_text': 'Item baru untuk list yang sudah ada'}
         )
 
