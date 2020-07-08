@@ -96,3 +96,16 @@ class TestViewList(TestCase):
         )
 
         self.assertRedirects(response, f'/lists/{list_yang_benar.id}/')
+
+    def test_error_validasi_berakhir_di_halaman_list(self):
+        list_ = List.objects.create()
+        
+        response = self.client.post(
+            f'/lists/{list_.id}/',
+            data={'item_text': ''}
+        )
+        
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'list.html')
+        error_diharapkan = 'Kamu gak boleh bikin item list kosong'
+        self.assertContains(response, error_diharapkan)
