@@ -1,9 +1,14 @@
 from django.shortcuts import redirect, render
-from lists.models import Item, List
 from django.core.exceptions import ValidationError
 
+from lists.models import Item, List
+from lists.forms import FormItem
+
+
 def home_page(request):
-    return render(request, 'home.html')
+    # Mengoper objek `FormItem` ke template sebagai context, dengan key 'form'.
+    # Hmm... mirip context di Odoo?
+    return render(request, 'home.html', {'form': FormItem()})
 
 def list_baru(request):
     list_ = List.objects.create()

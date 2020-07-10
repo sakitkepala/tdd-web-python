@@ -1,6 +1,8 @@
 from django.test import TestCase
 from django.utils.html import escape
+
 from lists.models import Item, List
+from lists.forms import FormItem
 
 
 class TestHomePage(TestCase):
@@ -9,6 +11,11 @@ class TestHomePage(TestCase):
         response = self.client.get('/')
 
         self.assertTemplateUsed(response, 'home.html')
+
+    def test_home_page_pakai_form_item(self):
+        response = self.client.get('/')
+        
+        self.assertIsInstance(response.context['form'], FormItem)
 
 
 class TestListBaru(TestCase):
